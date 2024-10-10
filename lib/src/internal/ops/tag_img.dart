@@ -11,9 +11,12 @@ const kTagImg = 'img';
 class TagImg {
   final WidgetFactory wf;
 
+  double? _height;
+  double? _width;
+
   static final _builts = Expando<Widget>();
 
-  TagImg(this.wf);
+  TagImg(this.wf, this._height, this._width);
 
   BuildOp get buildOp => BuildOp(
         alwaysRenderBlock: false,
@@ -21,7 +24,7 @@ class TagImg {
         defaultStyles: _defaultStyles,
         onParsed: (tree) {
           final data = _parse(tree);
-          final built = wf.buildImage(tree, data);
+          final built = wf.buildImage(tree, data, _height, _width);
           if (built == null) {
             final imgText = data.alt ?? data.title ?? '';
             if (imgText.isNotEmpty) {

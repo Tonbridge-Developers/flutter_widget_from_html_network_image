@@ -49,6 +49,10 @@ class HtmlWidget extends StatefulWidget {
   /// The custom loading builder.
   final OnLoadingBuilder? onLoadingBuilder;
 
+  final double? imageWidth;
+
+  final double? imageHeight;
+
   /// The callback when user taps an image.
   final void Function(ImageMetadata imageMetadata)? onTapImage;
 
@@ -104,6 +108,8 @@ class HtmlWidget extends StatefulWidget {
     super.key,
     this.onErrorBuilder,
     this.onLoadingBuilder,
+    this.imageWidth,
+    this.imageHeight,
     this.onTapImage,
     this.onTapUrl,
     List<dynamic>? rebuildTriggers,
@@ -132,6 +138,8 @@ class HtmlWidgetState extends State<HtmlWidget> {
   CoreBuildTree get _rootTree => CoreBuildTree.root(
         inheritanceResolvers: _rootResolvers,
         wf: _wf,
+        imageWidth: widget.imageWidth,
+        imageHeight: widget.imageHeight,
       );
 
   Widget get _sliverOrWidget0 => _sliverToBoxAdapterIfNeeded(widget0);

@@ -23,6 +23,8 @@ final _rootElement = dom.Element.tag('root');
 
 class CoreBuildTree extends BuildTree {
   final WidgetFactory wf;
+  final double? imageHeight;
+  final double? imageWidth;
 
   final BuildTree? _parent;
   final Iterable<_CoreBuildOp> _parentOps;
@@ -37,17 +39,23 @@ class CoreBuildTree extends BuildTree {
     BuildTree? parent,
     Iterable<_CoreBuildOp> parentOps = const [],
     required this.wf,
+    this.imageHeight,
+    this.imageWidth,
   })  : _parent = parent,
         _parentOps = parentOps;
 
   factory CoreBuildTree.root({
     required InheritanceResolvers inheritanceResolvers,
     required WidgetFactory wf,
+    double? imageWidth,
+    double? imageHeight,
   }) =>
       CoreBuildTree._(
         element: _rootElement,
         inheritanceResolvers: inheritanceResolvers,
         wf: wf,
+        imageHeight: imageHeight,
+        imageWidth: imageWidth,
       );
 
   @override
@@ -317,7 +325,7 @@ class CoreBuildTree extends BuildTree {
   }
 
   void _parseEverything() {
-    wf.parse(this);
+    wf.parse(this, imageWidth, imageHeight);
 
     for (final op in _parentOps) {
       op.onVisitChild(this);

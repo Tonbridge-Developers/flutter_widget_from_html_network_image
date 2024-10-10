@@ -296,13 +296,14 @@ class WidgetFactory extends WidgetFactoryResetter with AnchorWidgetFactory {
       SingleChildScrollView(scrollDirection: Axis.horizontal, child: child);
 
   /// Builds image widget from an [ImageMetadata].
-  Widget? buildImage(BuildTree tree, ImageMetadata data) {
+  Widget? buildImage(
+      BuildTree tree, ImageMetadata data, double? width, double? height) {
     final src = data.sources.isNotEmpty ? data.sources.first : null;
     if (src == null) {
       return null;
     }
 
-    var built = buildImageWidget(tree, src);
+    var built = buildImageWidget(tree, src, width, height);
 
     final title = data.title;
     if (built != null && title != null) {
@@ -335,6 +336,8 @@ class WidgetFactory extends WidgetFactoryResetter with AnchorWidgetFactory {
   Widget? buildImageWidget(
     BuildTree tree,
     ImageSource src,
+    double? width,
+    double? height,
   ) {
     final url = src.url;
     bool networkImage = false;
@@ -359,8 +362,8 @@ class WidgetFactory extends WidgetFactoryResetter with AnchorWidgetFactory {
     return networkImage
         ? ImageNetwork(
             image: url,
-            height: src.height ?? 200,
-            width: src.width ?? 200,
+            height: src.height ?? height ?? 200,
+            width: src.width ?? width ?? 200,
             fitAndroidIos: BoxFit.contain,
             fitWeb: BoxFitWeb.contain,
             borderRadius: BorderRadius.circular(20),
@@ -691,7 +694,7 @@ class WidgetFactory extends WidgetFactoryResetter with AnchorWidgetFactory {
   }
 
   /// Parses [tree] for build ops and text styles.
-  void parse(BuildTree tree) {
+  void parse(BuildTree tree, double? imageWidth, double? imageHeight) {
     final attrs = tree.element.attributes;
     final localName = tree.element.localName;
 
@@ -912,7 +915,8 @@ class WidgetFactory extends WidgetFactoryResetter with AnchorWidgetFactory {
         break;
 
       case kTagImg:
-        tree.register(_tagImg ??= TagImg(this).buildOp);
+        tree.register(
+            _tagImg ??= TagImg(this, imageWidth, imageHeight).buildOp);
         break;
 
       case kTagOrderedList:
