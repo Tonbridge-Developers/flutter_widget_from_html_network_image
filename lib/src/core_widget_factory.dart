@@ -7,6 +7,7 @@ import 'package:flutter/material.dart'
         Tooltip;
 import 'package:flutter/widgets.dart';
 import 'package:html/dom.dart' as dom;
+import 'package:image_network/image_network.dart';
 import 'package:logging/logging.dart';
 
 import 'core_data.dart';
@@ -333,6 +334,7 @@ class WidgetFactory extends WidgetFactoryResetter with AnchorWidgetFactory {
   /// Builds [Image].
   Widget? buildImageWidget(BuildTree tree, ImageSource src) {
     final url = src.url;
+    bool networkImage = false;
 
     ImageProvider? provider;
     if (url.startsWith('asset:')) {
@@ -342,6 +344,7 @@ class WidgetFactory extends WidgetFactoryResetter with AnchorWidgetFactory {
     } else if (url.startsWith('file:')) {
       provider = imageProviderFromFileUri(url);
     } else {
+      networkImage = true;
       provider = imageProviderFromNetwork(url);
     }
     if (provider == null) {
@@ -350,24 +353,30 @@ class WidgetFactory extends WidgetFactoryResetter with AnchorWidgetFactory {
 
     final image = src.image;
     final semanticLabel = image?.alt ?? image?.title;
-    return Image(
-      errorBuilder: (context, error, _) =>
-          onErrorBuilder(context, tree, error, src) ?? widget0,
-      loadingBuilder: (context, child, loadingProgress) {
-        if (loadingProgress == null) {
-          return child;
-        }
+    return networkImage
+        ? ImageNetwork(
+            image: url,
+            height: src.height ?? 200,
+            width: src.width ?? 200,
+          )
+        : Image(
+            errorBuilder: (context, error, _) =>
+                onErrorBuilder(context, tree, error, src) ?? widget0,
+            loadingBuilder: (context, child, loadingProgress) {
+              if (loadingProgress == null) {
+                return child;
+              }
 
-        final t = loadingProgress.expectedTotalBytes;
-        final loaded = loadingProgress.cumulativeBytesLoaded;
-        final v = t != null && t > 0 ? loaded / t : null;
-        return onLoadingBuilder(context, tree, v, src) ?? child;
-      },
-      excludeFromSemantics: semanticLabel == null,
-      fit: BoxFit.fill,
-      image: provider,
-      semanticLabel: semanticLabel,
-    );
+              final t = loadingProgress.expectedTotalBytes;
+              final loaded = loadingProgress.cumulativeBytesLoaded;
+              final v = t != null && t > 0 ? loaded / t : null;
+              return onLoadingBuilder(context, tree, v, src) ?? child;
+            },
+            excludeFromSemantics: semanticLabel == null,
+            fit: BoxFit.fill,
+            image: provider,
+            semanticLabel: semanticLabel,
+          );
   }
 
   /// Builds marker widget for a list item.
