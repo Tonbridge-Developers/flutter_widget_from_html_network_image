@@ -332,7 +332,10 @@ class WidgetFactory extends WidgetFactoryResetter with AnchorWidgetFactory {
   }
 
   /// Builds [Image].
-  Widget? buildImageWidget(BuildTree tree, ImageSource src) {
+  Widget? buildImageWidget(
+    BuildTree tree,
+    ImageSource src,
+  ) {
     final url = src.url;
     bool networkImage = false;
 
@@ -358,6 +361,10 @@ class WidgetFactory extends WidgetFactoryResetter with AnchorWidgetFactory {
             image: url,
             height: src.height ?? 200,
             width: src.width ?? 200,
+            fitAndroidIos: BoxFit.contain,
+            fitWeb: BoxFitWeb.contain,
+            borderRadius: BorderRadius.circular(20),
+            onTap: () => onTapUrl(url),
           )
         : Image(
             errorBuilder: (context, error, _) =>
