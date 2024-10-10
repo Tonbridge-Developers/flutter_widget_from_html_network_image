@@ -16,7 +16,7 @@ class TagImg {
 
   static final _builts = Expando<Widget>();
 
-  TagImg(this.wf, this._height, this._width);
+  TagImg(this.wf, this._width, this._height);
 
   BuildOp get buildOp => BuildOp(
         alwaysRenderBlock: false,
@@ -24,7 +24,7 @@ class TagImg {
         defaultStyles: _defaultStyles,
         onParsed: (tree) {
           final data = _parse(tree);
-          final built = wf.buildImage(tree, data, _height, _width);
+          final built = wf.buildImage(tree, data, _width, _height);
           if (built == null) {
             final imgText = data.alt ?? data.title ?? '';
             if (imgText.isNotEmpty) {

@@ -20,26 +20,6 @@ dev_dependencies:
     sdk: flutter
   golden_toolkit: ^0.15.0
   lint: any
-  mocktail: any
-  mocktail_image_network: ^1.0.0
   test: any
 
-flutter:
-  assets:
-    - test/images/
 
-funding:
-  - https://patreon.com/daohoangson
-  - https://buymeacoffee.com/daohoangson
-
-screenshots:
-  - description: Demo rendering of HTML tags
-    path: example/HelloWorldCoreScreen1.gif
-  - description: Demo rendering of HTML tags
-    path: example/HelloWorldCoreScreen2.jpg
-
-topics:
-  - widget
-  - html
-  - css
-  - fwfh
